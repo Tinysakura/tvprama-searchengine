@@ -1,0 +1,25 @@
+#指定应用名称
+spring:
+  application:
+    name: tvprama_searchengine
+  #配置数据源
+  datasource:
+     url: jdbc:mysql://localhost:3306/japannese_tv_prama?useSSL=false
+     username: lucene_manager
+     password: 19981002520qq
+     driver-class-name: com.mysql.jdbc.Driver
+     # 使用druid数据源
+     type: com.alibaba.druid.pool.DruidDataSource
+
+#开启dao层的日志
+logging:
+  level:
+    com:
+      cfh:
+        practice:
+          dao: debug
+
+#mybatis相关配置,mapperLocations指的路径是src/main/resources
+mybatis:
+  typeAliasesPackage: com.cfh.paractice.searchengine.pojo
+  mapperLocations: classpath:mappers/*.xml

@@ -15,15 +15,14 @@
 
         <!-- 数据库的相关配置 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/market"
-                        userId="cfh" password="19981002520qq"/>
+                        connectionURL="jdbc:mysql://localhost:3306/japannese_tv_prama"
+                        userId="lucene_manager" password="19981002520qq"/>
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
-
         <!-- 实体类生成的位置 -->
-        <javaModelGenerator targetPackage="com.cfh.practice.market.pojo" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.cfh.practice.searchengine.pojo" targetProject="src/main/java">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
@@ -34,12 +33,12 @@
         </sqlMapGenerator>
 
         <!-- Mapper 接口文件的位置 -->
-        <javaClientGenerator targetPackage="com.cfh.practice.market.dao" targetProject="src/main/java" type="XMLMAPPER">
+        <javaClientGenerator targetPackage="com.cfh.practice.searchengine.dao" targetProject="src/main/java" type="XMLMAPPER">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
         <!-- 相关表的配置 -->
-        <table tableName="user" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+        <table tableName="tv" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false"/>
     </context>
 </generatorConfiguration>
