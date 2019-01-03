@@ -14,7 +14,7 @@
 3.代码解析
 1.HardDiskIndexReaderBuilderTask
 首先我们需要从磁盘中加载已经持久化的索引目录，由于这样的索引目录通常情况下不止一个（通常一个表或者一个业务模块就会对应一个甚至多个索引目录）。所以为了加快索引的读取效率，使用多线程方式进行IndexReader的加载，使用Future异步获取结果。任务类代码如下：
-```
+```java
 package com.cfh.practice.searchengine.task;
 
 import org.apache.lucene.index.DirectoryReader;
@@ -63,7 +63,7 @@ public class HardDiskIndexReaderBuilderTask implements Callable<IndexReader> {
 
 2.IndexReaderLoader
 IndexSearcher的构建类，使用线程池异步获取所有索引目录下的IndexReader之后包装成MultiReader进行多目录下索引的读取，同时根据需求返回实时或非实时的IndexSearcher供调用者调用。具体的实现细节请参考源码注释
-```
+```java
 package com.cfh.practice.searchengine.common;
 
 import com.cfh.practice.searchengine.task.HardDiskIndexReaderBuilderTask;
@@ -209,7 +209,7 @@ public class IndexReaderLoader {
 
 3.IndexReaderLoaderConfig
 IndexReaderLoader的配置类，配置IndexReaderLoader随容器启动而注入。没什么好说的注意bean名（默认是@bean注解的方法名）不要重复即可。
-```
+```java
 package com.cfh.practice.searchengine.config;
 
 import com.cfh.practice.searchengine.common.IndexReaderLoader;
@@ -256,7 +256,7 @@ public class IndexReaderLoaderConfig {
 
 4.DataSourceFlushTask
 既然有了建立索引的任务类，那么理所应当的拥有可以刷新数据源操作索引的相关任务类。由于数据源可能有多个，所以将一些公共行为抽象到了父类中，子类只需要实现updateIndex()方法指定从哪个数据源怎么刷新数据以及getIndexWriter()方法即如何获取IndexWriter即可。主要的逻辑集中在consume方法上，即根据RAMDirectoy的使用情况对刷新的数据进行消费。一些细节上的问题在源码都有详细注释应该不难理解
-```
+```java
 package com.cfh.practice.searchengine.task;
 
 import com.cfh.practice.searchengine.common.Consts;
@@ -421,7 +421,7 @@ public abstract class DataSourceFlushTask implements Runnable{
 在对刷新的数据建立索引时直接使用了ObjectTransferUtil.bean2Doc(object, clazz)这个方法，使用反射的方式全自动的建立索引。如果使用者对需要建立的索引有特殊的需求可以替换这个方法为自己的实现进行索引建立。源码实现如下
 
 5.ObjectTransferUtil
-```
+```java
 package com.cfh.practice.searchengine.util;
 
 import org.apache.lucene.document.Document;
@@ -476,7 +476,7 @@ public class ObjectTransferUtil {
 
 下面提供一个任务类的具体实现类，对TV表的数据进行刷新
 5.TvFlushTask
-```
+```java
 package com.cfh.practice.searchengine.task;
 
 import com.cfh.practice.searchengine.pojo.Tv;
@@ -556,7 +556,7 @@ public class TvFlushTask extends DataSourceFlushTask{
 ```
 6.TvService
 我这里是通过检查表中的一个字段检查是否有数据刷新，并在刷新出数据后改变该字段的状态，所以需要一个事务操作
-```
+```java
 package com.cfh.practice.searchengine.service;
 
 import com.cfh.practice.searchengine.common.IndexReaderLoader;
@@ -654,8 +654,8 @@ public class TvService {
 ```
 
 7.RAMDirectoryControl
-由于我们多出需要使用RAMDirectory,建立一个Contro类对其进行管理
-```
+由于我们多出需要使用RAMDirectory,建立一个Control类对其进行管理
+```java
 package com.cfh.practice.searchengine.common;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -762,7 +762,7 @@ public class RAMDirectoryControl {
 
 8.DataSourceaFlushExecutor
 数据源刷新任务的执行类,完成初始化后即开启一系列定时任务对一个或多个数据源进行刷新
-```
+```java
 package com.cfh.practice.searchengine.common;
 
 import com.cfh.practice.searchengine.task.DataSourceFlushTask;
@@ -801,7 +801,7 @@ public class DataSourceFlushExecutor {
 ```
 9.DataSourceFlushExecutorConfig
 定时刷新任务的相关配置类。做一些初始化配置，并让定时任务随容器的启动而启动。
-```
+```java
 package com.cfh.practice.searchengine.config;
 
 import com.cfh.practice.searchengine.common.DataSourceFlushExecutor;
